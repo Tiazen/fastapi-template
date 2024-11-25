@@ -1,0 +1,21 @@
+FROM python:3.12-alpine AS build
+WORKDIR /app
+
+COPY ./requirements.txt .
+
+RUN apk add --no-cache git build-base zlib-dev
+
+RUN python3 -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+RUN pip3 install --no-cache-dir -r requirements.txt
+RUN pip3 uninstall -y pip setuptools
+
+FROM python:3.12-alpine AS release
+WORKDIR /app
+
+COPY . .
+
+COPY --from=build /opt/venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+ENV PYTHONDONTWRITEBYTECODE=1

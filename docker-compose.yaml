@@ -1,0 +1,26 @@
+services:
+  postgres:
+    image: postgres
+    container_name: database
+    environment:
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_USER=
+      - POSTGRES_DB=
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432 
+  
+  web:
+    build: .
+    command: uvicorn app.main:app --host 0.0.0.0  --reload
+    ports:
+      - 8000:8000
+    restart: always
+    environment:
+      - PYTHONPATH=/app
+      - DB_URL=postgresql://storyFiner:12345@database:5432/storyfinerdb
+    volumes:
+      - ./:/app
+    depends_on:
+      - postgres
