@@ -19,7 +19,7 @@ services:
     restart: always
     environment:
       - PYTHONPATH=/app
-      - DB_URL=postgresql://storyFiner:12345@database:5432/storyfinerdb
+      - DB_URL=postgresql://:@database:5432/
     volumes:
       - ./:/app
     depends_on:
